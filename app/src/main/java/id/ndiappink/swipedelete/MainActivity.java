@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         mDataSet = new ArrayList<>();
         loadData();
 
-
+//ciao
 
         if(mDataSet.isEmpty()){
             mRecyclerView.setVisibility(View.GONE);
