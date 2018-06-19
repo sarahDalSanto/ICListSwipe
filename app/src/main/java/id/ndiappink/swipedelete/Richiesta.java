@@ -1,14 +1,21 @@
 package id.ndiappink.swipedelete;
 
+import android.graphics.Bitmap;
+import android.os.IBinder;
+import android.widget.ImageView;
+
 public class Richiesta {
 
 
     private String matricola, nomeEcognome, giornoInizio,  oraInizio,  giornoFine,  oraFine, tipo, testo;
 
-    public Richiesta() {
+
+    public Richiesta(){
+
     }
 
-    public Richiesta(String matricola, String nomeEcognome, String giornoInizio, String oraInizio, String giornoFine, String oraFine, String tipo, String testo) {
+
+    public Richiesta( String matricola, String nomeEcognome, String giornoInizio, String oraInizio, String giornoFine, String oraFine, String tipo, String testo) {
         this.matricola = matricola;
         this.nomeEcognome = nomeEcognome;
         this.giornoInizio = giornoInizio;
@@ -17,7 +24,10 @@ public class Richiesta {
         this.oraFine = oraFine;
         this.testo = testo;
         this.tipo = tipo;
+
     }
+
+
 
     public String getMatricola() {
         return matricola;

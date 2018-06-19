@@ -1,5 +1,8 @@
 package id.ndiappink.swipedelete;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,11 +26,12 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ArrayList<Richiesta> mDataSet;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         tvEmptyTextView = (TextView) findViewById(R.id.empty_view);
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -34,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         mDataSet = new ArrayList<>();
         loadData();
 
-//ciao
 
         if(mDataSet.isEmpty()){
             mRecyclerView.setVisibility(View.GONE);
@@ -68,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void loadData() {
-        String testo = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo";
+        String testo = "Lorem ipsum dolor sit amet, consectetur adipiscing nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo";
         for (int i = 0; i <= 20; i++) {
-            mDataSet.add(new Richiesta(i+"", "Matteo Marchi", "03 Giu 2018", "9:00", "03 Giu 2018", "18:00","FERIE", testo));
+            mDataSet.add(new Richiesta( i+"", "Matteo Marchi", "03 Giu 2018", "9:00", "03 Giu 2018", "18:00","FERIE", testo));
         }
     }
 
