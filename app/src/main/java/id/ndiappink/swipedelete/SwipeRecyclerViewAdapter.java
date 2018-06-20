@@ -79,6 +79,7 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
     @Override
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
 
+
         if(position %2 == 1)
         {
             viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -131,9 +132,6 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         params1.gravity = Gravity.CENTER;
         viewHolder.ll.setLayoutParams(params1);
         viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
-
-
-
             @Override
             public void onStartOpen(SwipeLayout layout) {
 
@@ -233,6 +231,7 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
     }
 
     public static class SimpleViewHolder extends RecyclerView.ViewHolder{
+
         public SwipeLayout swipeLayout;
         public LinearLayout ll;
         public TextView tv_matricola;

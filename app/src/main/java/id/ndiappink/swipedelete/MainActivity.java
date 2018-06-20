@@ -9,16 +9,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.util.Attributes;
 import java.util.ArrayList;
+
+import static android.view.Gravity.END;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -26,11 +34,19 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private ArrayList<Richiesta> mDataSet;
 
+    public static interface ClickListener{
+        public void onClick(View view,int position);
+        public void onLongClick(View view,int position);
+    }
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         tvEmptyTextView = (TextView) findViewById(R.id.empty_view);
@@ -48,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             tvEmptyTextView.setVisibility(View.GONE);
         }
 
-        SwipeRecyclerViewAdapter mAdapter = new SwipeRecyclerViewAdapter(this, mDataSet);
+        final SwipeRecyclerViewAdapter mAdapter = new SwipeRecyclerViewAdapter(this, mDataSet);
 
         ((SwipeRecyclerViewAdapter) mAdapter).setMode(Attributes.Mode.Single);
 
@@ -66,7 +82,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(this,
+                mRecyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, final int position) {
+                //Values are passing to activity & to fragment as well
+                Toast.makeText(MainActivity.this, "Single Click on position :"+position, Toast.LENGTH_SHORT).show();
 
+                mAdapter.getSwipeLayoutResourceId(position);
+                mAdapter.getItemId(position);
+                mAdapter.getItemCount();
+                
+
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                Toast.makeText(MainActivity.this, "Long press on position :"+position,
+                        Toast.LENGTH_LONG).show();
+            }
+        }));
     }
 
 
