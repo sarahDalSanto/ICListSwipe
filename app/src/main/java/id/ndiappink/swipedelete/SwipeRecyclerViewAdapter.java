@@ -38,6 +38,9 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.sql.Wrapper;
 import java.util.ArrayList;
 import java.util.logging.Handler;
@@ -55,21 +58,22 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
 
     private Context mContext;
     int rotazione = 0;
-    View v;
-    private ArrayList<Richiesta> richiestaList;
+    private ArrayList<Richiesta> arrayListRichiestaa;
+    SimpleViewHolder h;
+
+    boolean open = false;
 
 
 
-    public SwipeRecyclerViewAdapter(Context context, ArrayList<Richiesta> objects) {
+    public SwipeRecyclerViewAdapter(Context context, ArrayList<Richiesta> arrayListRichiesta) {
         this.mContext = context;
-        this.richiestaList = objects;
+        this.arrayListRichiestaa = arrayListRichiesta;
     }
 
 
     @Override
     public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.swipe_layout, parent, false);
-        v = view;
         return new SimpleViewHolder(view);
 
     }
@@ -78,7 +82,7 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
 
     @Override
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
-
+        h = viewHolder;
 
         if(position %2 == 1)
         {
@@ -88,20 +92,26 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         else
         {
             viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFFAF8FD"));
-
         }
-        final Richiesta item = richiestaList.get(position);
+
+       final Richiesta item = arrayListRichiestaa.get(position);
+
+            viewHolder.tv_matricola.setText(item.getMatricola());
+            viewHolder.tv_nomeEcognome.setText(item.getNomeEcognome());
+            viewHolder.tv_giornoInizio.setText(item.getGiornoInizio());
+            viewHolder.tv_oraInizio.setText(item.getOraInizio());
+        /*
+        String string = item.getOraFine();
+        String[] parts = string.split("\\.");
+        String part1 = parts[0]; // 004
+        String part2 = parts[1];
+*/
+            viewHolder.tv_giornoFine.setText(item.getGiornoFine());
+            viewHolder.tv_oraFine.setText(item.getOraFine());
+            viewHolder.tv_testo.setText(item.getTesto());
+            viewHolder.tv_tipo.setText(item.getTipo() );
 
 
-
-        viewHolder.tv_matricola.setText(item.getMatricola());
-        viewHolder.tv_nomeEcognome.setText(item.getNomeEcognome());
-        viewHolder.tv_giornoInizio.setText(item.getGiornoInizio());
-        viewHolder.tv_oraInizio.setText(item.getOraInizio());
-        viewHolder.tv_giornoFine.setText(item.getGiornoFine());
-        viewHolder.tv_oraFine.setText(item.getOraFine());
-        viewHolder.tv_testo.setText(item.getTesto());
-        viewHolder.tv_tipo.setText(item.getTipo() );
 
 
         viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
@@ -129,8 +139,22 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
         });
 
         FrameLayout.LayoutParams params1 = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        params1.gravity = Gravity.CENTER;
         viewHolder.ll.setLayoutParams(params1);
+        viewHolder.ll.setGravity(CENTER);
+
+        viewHolder.swipeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!open) {
+                    viewHolder.swipeLayout.open();
+                    open = true;
+                } else {
+                    viewHolder.swipeLayout.close();
+                    open = false;
+                }
+            }
+        });
+
         viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
             @Override
             public void onStartOpen(SwipeLayout layout) {
@@ -139,11 +163,13 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
 
             @Override
             public void onOpen(SwipeLayout layout) {
-                FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                params2.gravity = Gravity.START;
+                int width = viewHolder.ll.getWidth();
+                int width2 = width*70/100;
+
+                FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(width2, FrameLayout.LayoutParams.WRAP_CONTENT);
 
                 viewHolder.ll.setGravity(END);
-                viewHolder.ll.setPadding(0,0,15,0);
+                viewHolder.ll.setPadding(0,0,8,0);
                 viewHolder.ll.setLayoutParams(params2);
 
                 viewHolder.btn_testo.setEnabled(false);
@@ -153,7 +179,7 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
                 rotazione =0;
 
                 Animation animation1 = AnimationUtils.loadAnimation(mContext, R.anim.right_to_left);
-                    viewHolder.ll.startAnimation(animation1);
+                   // viewHolder.ll.startAnimation(animation1);
 
             }
 
@@ -165,6 +191,17 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
 
             @Override
             public void onClose(SwipeLayout layout) {
+
+
+                //animazione
+                Animation fadeIn = new AlphaAnimation(0, 1);
+                fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+                fadeIn.setDuration(500);
+
+                AnimationSet animation = new AnimationSet(false); //change to false
+                //animation.addAnimation(fadeIn);
+
+                viewHolder.ll.setAnimation(animation);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                 viewHolder.ll.setLayoutParams(params);
                 viewHolder.ll.setGravity(CENTER);
@@ -172,18 +209,9 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
                 viewHolder.btn_testo.setVisibility(View.VISIBLE);
                 viewHolder.btn_testo.setEnabled(true);
 
+                /*
                 Animation animation1 = AnimationUtils.loadAnimation(mContext, R.anim.left_to_right);
                 viewHolder.ll.startAnimation(animation1);
-                /*
-                //animazione
-                Animation fadeIn = new AlphaAnimation(0, 1);
-                fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-                fadeIn.setDuration(500);
-
-                AnimationSet animation = new AnimationSet(false); //change to false
-                animation.addAnimation(fadeIn);
-
-                viewHolder.ll.setAnimation(animation);
                 */
             }
 
@@ -210,9 +238,9 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
             @Override
             public void onClick(View v) {
                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
-                richiestaList.remove(position);
+                //richiestaList.remove(position);
                 notifyItemRemoved(position);
-                notifyItemRangeChanged(position, richiestaList.size());
+                notifyItemRangeChanged(position, arrayListRichiestaa.size());
                 mItemManger.closeAllItems();
             }
         });
@@ -222,7 +250,7 @@ public class SwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<SwipeRecycler
 
     @Override
     public int getItemCount() {
-        return richiestaList.size();
+        return arrayListRichiestaa.size();
     }
 
     @Override

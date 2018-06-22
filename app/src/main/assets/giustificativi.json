@@ -1,7 +1,4 @@
-<resources>
-    <string name="app_name">Swipe For Delete</string>
-    <string name="action_settings">Settings</string>
-    <string name="jsonn">{
+{
     "retcode": 0,
     "retcodedes": "TuttoOk",
     "num": 34,
@@ -504,5 +501,3 @@
         }
     ]
 }
-    </string>
-</resources>
